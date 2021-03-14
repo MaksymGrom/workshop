@@ -18,4 +18,17 @@ class ErpPrice extends AbstractDb
     {
         $this->_init('erp_price', 'entity_id');
     }
+
+    public function insertOnDuplicate(array $data)
+    {
+        if (empty($data)) {
+            return 0;
+        }
+
+        return $this->getConnection()->insertOnDuplicate(
+            $this->getMainTable(),
+            $data,
+            ['price', 'sku']
+        );
+    }
 }
