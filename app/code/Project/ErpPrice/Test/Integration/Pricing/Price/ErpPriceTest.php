@@ -59,5 +59,6 @@ class ErpPriceTest extends TestCase
     public static function dataFixture()
     {
         require __DIR__ . '/../../_files/simple_product.php';
+        require __DIR__ . '/../../_files/erp_price.php';
     }
 }

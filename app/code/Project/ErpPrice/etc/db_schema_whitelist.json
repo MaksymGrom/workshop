@@ -1,0 +1,15 @@
+{
+  "erp_price": {
+    "column": {
+      "entity_id": true,
+      "sku": true,
+      "price": true
+    },
+    "index": {
+      "ERP_PRICE_ENTITY_ID": true
+    },
+    "constraint": {
+      "PRIMARY": true
+    }
+  }
+}
