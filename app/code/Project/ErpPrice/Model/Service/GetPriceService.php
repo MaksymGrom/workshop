@@ -50,6 +50,8 @@ class GetPriceService implements GetPriceServiceInterface
         $priceResult = $this->priceResultFactory->create();
 
         $collection->addFieldToFilter('sku', $sku)
+            ->addFieldToFilter('price', ['gt' => 0])
+            ->addOrder('price', Collection::SORT_ORDER_ASC)
             ->setPageSize(1)
             ->setCurPage(1);
 
