@@ -11,6 +11,7 @@ use Project\ErpPrice\Model\ResourceModel\ErpPrice as ResourceModel;
  * @method setPrice(float $price): ErpPrice
  * @method getSku(): string
  * @method setSku(string $sku): ErpPrice
+ * @method setIsDeleted(bool $isDeleted): ErpPrice
  */
 class ErpPrice extends AbstractModel
 {

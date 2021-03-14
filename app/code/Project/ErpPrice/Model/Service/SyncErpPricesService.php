@@ -46,9 +46,18 @@ class SyncErpPricesService
                 'entity_id' => $price['id'],
                 'sku' => $price['sku'],
                 'price' => $price['price'],
+                'is_deleted' => '0'
             ];
         }
 
+        if (empty($dbData)) {
+            return;
+        }
+
+        $this->erpPriceResource->setAllIsDeleted();
+
         $this->erpPriceResource->insertOnDuplicate($dbData);
+
+        $this->erpPriceResource->deleteIsDeleted();
     }
 }

@@ -19,6 +19,16 @@ class ErpPrice extends AbstractDb
         $this->_init('erp_price', 'entity_id');
     }
 
+    public function setAllIsDeleted()
+    {
+        return $this->getConnection()->update($this->getMainTable(), ['is_deleted' => '1']);
+    }
+
+    public function deleteIsDeleted()
+    {
+        return $this->getConnection()->delete($this->getMainTable(), 'is_deleted = 1');
+    }
+
     public function insertOnDuplicate(array $data)
     {
         if (empty($data)) {
@@ -28,7 +38,7 @@ class ErpPrice extends AbstractDb
         return $this->getConnection()->insertOnDuplicate(
             $this->getMainTable(),
             $data,
-            ['price', 'sku']
+            ['price', 'sku', 'is_deleted']
         );
     }
 }
