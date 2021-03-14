@@ -39,4 +39,24 @@ class ErpPriceConfigTest extends TestCase
     {
         $this->assertTrue($this->erpPriceConfig->isEnabled());
     }
+
+    public function testJsonExtInFilePath()
+    {
+        $filePath = $this->erpPriceConfig->getFilePath();
+        $filePathParts = explode('.', $filePath);
+        $filePathParts = array_reverse($filePathParts);
+        $ext = reset($filePathParts);
+
+        $this->assertEquals('json', $ext);
+    }
+
+    /**
+     * @magentoConfigFixture project/erp_price/file_path /app/code/Project/ErpPrice/Test/Integration/_files/erp_price.json
+     */
+    public function testFilePathConfig()
+    {
+        $filePath = $this->erpPriceConfig->getFilePath();
+
+        $this->assertEquals('/app/code/Project/ErpPrice/Test/Integration/_files/erp_price.json', $filePath);
+    }
 }

@@ -5,6 +5,7 @@
         <project>
             <erp_price>
                 <enabled>0</enabled>
+                <file_path>/var/erp_price.json</file_path>
             </erp_price>
         </project>
     </default>
