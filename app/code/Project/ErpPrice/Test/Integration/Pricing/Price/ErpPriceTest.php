@@ -7,6 +7,7 @@ namespace Project\ErpPrice\Test\Integration\Pricing\Price;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Catalog\Model\Product;
 use Magento\Catalog\Pricing\Price\BasePrice;
+use Magento\Quote\Model\ResourceModel\Quote\Collection as QuoteCollection;
 use Magento\TestFramework\Helper\Bootstrap;
 use Magento\Framework\ObjectManagerInterface;
 use PHPUnit\Framework\TestCase;
@@ -101,8 +102,45 @@ class ErpPriceTest extends TestCase
         $this->assertEquals(100., $price->getValue(), 'ErpPrice must be disabled');
     }
 
+    /**
+     * @magentoDbIsolation enabled
+     * @magentoDataFixture quoteDataFixture
+     * @magentoConfigFixture project/erp_price/enabled 1
+     * @magentoAppArea frontend
+     */
+    public function testErpPriceInQuote()
+    {
+        /** @var Product $product */
+        $product = $this->productRepository->get('simple');
+
+        $price = $product->getPriceInfo()->getPrice(BasePrice::PRICE_CODE);
+        $this->assertEquals(1., $price->getValue(), 'ErpPrice must be disabled');
+
+        /** @var QuoteCollection $quoteCollection */
+        $quoteCollection = $this->objectManager->create(QuoteCollection::class);
+
+        $quoteCollection->addFieldToFilter('reserved_order_id', 'test01');
+
+        $quote = $quoteCollection->getFirstItem();
+
+        $quoteItemBasePrice = 999999;
+
+        foreach ($quote->getAllItems() as $item) {
+            if ($item->getSku() === 'simple') {
+                $quoteItemBasePrice = $item->getBasePrice();
+            }
+        }
+
+        $this->assertEquals(1., $quoteItemBasePrice);
+    }
+
     public static function dataFixture()
     {
         require __DIR__ . '/../../_files/simple_product.php';
+    }
+
+    public static function quoteDataFixture()
+    {
+        require __DIR__ . '/../../_files/quote.php';
     }
 }
