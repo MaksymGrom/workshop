@@ -26,11 +26,13 @@ class ErpPriceTest extends TestCase
     protected function setUp(): void
     {
         $this->objectManager = Bootstrap::getObjectManager();
-        $this->productRepository = $this->objectManager->get(ProductRepositoryInterface::class);
+        $this->productRepository = $this->objectManager->create(ProductRepositoryInterface::class);
     }
+
     /**
      * @magentoDbIsolation enabled
      * @magentoDataFixture dataFixture
+     * @magentoConfigFixture project/erp_price/enabled 1
      */
     public function testErpPrice()
     {
@@ -39,6 +41,19 @@ class ErpPriceTest extends TestCase
 
         $price = $product->getPriceInfo()->getPrice(BasePrice::PRICE_CODE);
         $this->assertEquals(1., $price->getValue(), 'ErpPrice must be eq 1.0');
+    }
+
+    /**
+     * @magentoDbIsolation enabled
+     * @magentoDataFixture dataFixture
+     */
+    public function testDisabledErpPrice()
+    {
+        /** @var Product $product */
+        $product = $this->productRepository->get('simple');
+
+        $price = $product->getPriceInfo()->getPrice(BasePrice::PRICE_CODE);
+        $this->assertEquals(100., $price->getValue(), 'ErpPrice must be disabled');
     }
 
     public static function dataFixture()
