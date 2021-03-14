@@ -7,7 +7,9 @@ namespace Project\ErpPrice\Pricing\Price;
 use Magento\Framework\Pricing\Adjustment\CalculatorInterface;
 use Magento\Framework\Pricing\Price\AbstractPrice;
 use Magento\Framework\Pricing\Price\BasePriceProviderInterface;
+use Magento\Framework\Pricing\PriceCurrencyInterface;
 use Magento\Framework\Pricing\SaleableInterface;
+use Project\ErpPrice\Api\GetPriceServiceInterface;
 use Project\ErpPrice\Model\ErpPriceConfig;
 
 /**
@@ -26,22 +28,30 @@ class ErpPrice extends AbstractPrice implements BasePriceProviderInterface
     private $erpPriceConfig;
 
     /**
+     * @var GetPriceServiceInterface
+     */
+    private $getPriceService;
+
+    /**
      * ErpPrice constructor.
      * @param SaleableInterface $saleableItem
-     * @param $quantity
+     * @param float $quantity
      * @param CalculatorInterface $calculator
-     * @param \Magento\Framework\Pricing\PriceCurrencyInterface $priceCurrency
+     * @param PriceCurrencyInterface $priceCurrency
      * @param ErpPriceConfig $erpPriceConfig
+     * @param GetPriceServiceInterface $getPriceService
      */
     public function __construct(
         SaleableInterface $saleableItem,
         $quantity,
         CalculatorInterface $calculator,
-        \Magento\Framework\Pricing\PriceCurrencyInterface $priceCurrency,
-        ErpPriceConfig $erpPriceConfig
+        PriceCurrencyInterface $priceCurrency,
+        ErpPriceConfig $erpPriceConfig,
+        GetPriceServiceInterface $getPriceService
     ) {
         parent::__construct($saleableItem, $quantity, $calculator, $priceCurrency);
         $this->erpPriceConfig = $erpPriceConfig;
+        $this->getPriceService = $getPriceService;
     }
 
     /**
@@ -58,7 +68,9 @@ class ErpPrice extends AbstractPrice implements BasePriceProviderInterface
                 return $this->value;
             }
 
-            $this->value = 1.;
+            $priceResult = $this->getPriceService->execute($this->getProduct()->getSku());
+
+            $this->value = $priceResult->getPrice() ?: false;
         }
 
         return $this->value;
