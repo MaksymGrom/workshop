@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Project\ErpPrice\Api\GetPriceServiceInterface" type="Project\ErpPrice\Model\Service\GetPriceService"/>
+    <preference for="Project\ErpPrice\Api\Data\PriceResultInterface" type="Project\ErpPrice\Model\Data\PriceResult"/>
+
+    <virtualType name="Magento\Catalog\Pricing\Price\Pool">
+        <arguments>
+            <argument name="prices" xsi:type="array">
+                <item name="erp_price" xsi:type="string">Project\ErpPrice\Pricing\Price\ErpPrice</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <type name="Magento\Framework\Console\CommandListInterface">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="project_erpprice_sync_erp_prices" xsi:type="object">
+                    Project\ErpPrice\Console\Command\SyncErpPrices
+                </item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Project\ErpPrice\Console\Command\SyncErpPrices">
+        <arguments>
+            <argument name="syncErpPricesService" xsi:type="object">Project\ErpPrice\Model\Service\SyncErpPricesService\Proxy</argument>
+        </arguments>
+    </type>
+</config>

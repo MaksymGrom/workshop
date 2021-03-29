@@ -1,0 +1,19 @@
+{
+  "Prices": [
+    {
+      "id": 1,
+      "sku": "simple",
+      "price": 75.0
+    },
+    {
+      "id": 3,
+      "sku": "simple",
+      "price": 1.0
+    },
+    {
+      "id": 5,
+      "sku": "simple",
+      "price": 350.0
+    }
+  ]
+}
